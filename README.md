@@ -73,3 +73,8 @@ python -m src.main
 ```
 
 Al ejecutar el comando se abre la interfaz grafica Tkinter para registrar clientes, servicios y reservas, o para correr la demostracion funcional completa.
+
+## Version publicada
+
+- `v1.0.0`
+- https://github.com/EderVillalobos/fase4-academico/releases/tag/v1.0.0
