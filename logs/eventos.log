@@ -1,0 +1,32 @@
+[2026-07-06 22:46:07] INFO: Inicio de ejecucion de version 10.
+[2026-07-06 22:46:07] INFO: Sistema inicializado.
+[2026-07-06 22:46:07] INFO: Cliente agregado correctamente: Ana Perez (100200300)
+[2026-07-06 22:46:07] INFO: Operacion 1 ejecutada correctamente.
+[2026-07-06 22:46:07] INFO: Operacion 1 finalizada.
+[2026-07-06 22:46:07] ERROR: Operacion 2 -> ClientError: Ya existe un cliente con el identificador CLI-001.
+[2026-07-06 22:46:07] INFO: Operacion 2 finalizada.
+[2026-07-06 22:46:07] ERROR: Operacion 3 -> ValidationError: El nombre del cliente debe tener al menos 3 caracteres validos.
+[2026-07-06 22:46:07] INFO: Operacion 3 finalizada.
+[2026-07-06 22:46:07] INFO: Servicio agregado correctamente: Sala Sala Reuniones para 12 personas
+[2026-07-06 22:46:07] INFO: Servicio agregado correctamente: Equipo Proyector x 2
+[2026-07-06 22:46:07] INFO: Servicio agregado correctamente: Asesoria Asesoria Tecnica en Sistemas
+[2026-07-06 22:46:07] INFO: Operacion 4 ejecutada correctamente.
+[2026-07-06 22:46:07] INFO: Operacion 4 finalizada.
+[2026-07-06 22:46:07] ERROR: Operacion 5 -> ServiceError: Ya existe un servicio con el identificador SER-001.
+[2026-07-06 22:46:07] INFO: Operacion 5 finalizada.
+[2026-07-06 22:46:07] INFO: Reserva creada correctamente: RES-001
+[2026-07-06 22:46:07] INFO: Operacion 6 ejecutada correctamente.
+[2026-07-06 22:46:07] INFO: Operacion 6 finalizada.
+[2026-07-06 22:46:07] ERROR: Operacion 7 -> ReservationError: Ya existe una reserva con el identificador RES-001.
+[2026-07-06 22:46:07] INFO: Operacion 7 finalizada.
+[2026-07-06 22:46:07] INFO: Reserva creada correctamente: RES-002
+[2026-07-06 22:46:07] INFO: Operacion 8 ejecutada correctamente.
+[2026-07-06 22:46:07] INFO: Operacion 8 finalizada.
+[2026-07-06 22:46:07] ERROR: Operacion 9 -> ReservationError: Ya existe una reserva con el identificador RES-002.
+[2026-07-06 22:46:07] INFO: Operacion 9 finalizada.
+[2026-07-06 22:46:07] INFO: Operacion 10 ejecutada correctamente.
+[2026-07-06 22:46:07] INFO: Operacion 10 finalizada.
+[2026-07-06 22:46:07] INFO: Reporte final generado: reporte_final.txt
+[2026-07-06 22:46:07] INFO: Auditoria Anexo 3 generada: auditoria_anexo3.txt
+[2026-07-06 22:46:07] INFO: Cierre final generado: cierre_final.txt
+[2026-07-06 22:46:07] INFO: Fin de ejecucion de version 10.
