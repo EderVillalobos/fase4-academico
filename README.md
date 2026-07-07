@@ -71,3 +71,5 @@ El sistema debe manejar errores provenientes de:
 ```bash
 python -m src.main
 ```
+
+Al ejecutar el comando se abre la interfaz grafica Tkinter para registrar clientes, servicios y reservas, o para correr la demostracion funcional completa.
