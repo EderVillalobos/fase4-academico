@@ -17,26 +17,28 @@ class SistemaFJ:
 
     def agregar_cliente(self, cliente: Cliente) -> None:
         if self.buscar_cliente(cliente.identificador) is not None:
-            raise ClientError("Ya existe un cliente con ese identificador.")
+            raise ClientError(f"Ya existe un cliente con el identificador {cliente.identificador}.")
         self.clientes.append(cliente)
-        registrar_evento(f"Cliente agregado: {cliente.descripcion()}")
+        registrar_evento(f"Cliente agregado correctamente: {cliente.descripcion()}")
 
     def agregar_servicio(self, servicio: Servicio) -> None:
         if self.buscar_servicio(servicio.identificador) is not None:
-            raise ServiceError("Ya existe un servicio con ese identificador.")
+            raise ServiceError(f"Ya existe un servicio con el identificador {servicio.identificador}.")
         self.servicios.append(servicio)
-        registrar_evento(f"Servicio agregado: {servicio.descripcion()}")
+        registrar_evento(f"Servicio agregado correctamente: {servicio.descripcion()}")
 
     def crear_reserva(self, identificador: str, cliente_id: str, servicio_id: str, horas: float) -> Reserva:
+        if self.buscar_reserva(identificador) is not None:
+            raise ReservationError(f"Ya existe una reserva con el identificador {identificador}.")
         cliente = self.buscar_cliente(cliente_id)
         servicio = self.buscar_servicio(servicio_id)
         if cliente is None:
-            raise ReservationError("No se encontro el cliente.")
+            raise ReservationError(f"No se encontro el cliente con identificador {cliente_id}.")
         if servicio is None:
-            raise ReservationError("No se encontro el servicio.")
+            raise ReservationError(f"No se encontro el servicio con identificador {servicio_id}.")
         reserva = Reserva(identificador, cliente, servicio, horas)
         self.reservas.append(reserva)
-        registrar_evento(f"Reserva creada: {reserva.identificador}")
+        registrar_evento(f"Reserva creada correctamente: {reserva.identificador}")
         return reserva
 
     def buscar_cliente(self, identificador: str) -> Optional[Cliente]:
@@ -65,6 +67,16 @@ class SistemaFJ:
 
     def listar_reservas(self) -> List[str]:
         return [reserva.resumen() for reserva in self.reservas]
+
+    def reporte_validaciones(self) -> List[str]:
+        return [
+            "Identificadores obligatorios: SI",
+            "Texto minimo para nombres y descripciones: SI",
+            "Correos con formato basico valido: SI",
+            "Niveles numericos para tarifas, horas y cantidades: SI",
+            "Deteccion de duplicados en clientes, servicios y reservas: SI",
+            "Mensajes con contexto del dato afectado: SI",
+        ]
 
     def contar_reservas_por_estado(self) -> List[str]:
         estados = {
@@ -124,6 +136,28 @@ class SistemaFJ:
         print(f"    Reservas registradas: {len(self.listar_reservas())}")
         print("  Observacion:")
         print("    La version 4 consolida la trazabilidad y deja el reporte listo para documentacion academica.")
+        print("\nVerificacion de cumplimiento del Anexo 3:")
+        for linea in self.reporte_cumplimiento_anexo3():
+            print(f"  {linea}")
+        print("\nTrazabilidad de reservas:")
+        for reserva in self.reservas:
+            print(f"  {reserva.identificador}: {reserva.trazabilidad()}")
+
+    def ejecutar_demostracion_v5(self) -> None:
+        print("=== Sistema Integral de Gestion FJ - Version 5 ===")
+        self._ejecutar_operaciones_version5()
+        print("\nResumen ejecutivo:")
+        print(f"  {self.resumen()}")
+        print("  Validaciones reforzadas:")
+        for linea in self.reporte_validaciones():
+            print(f"    - {linea}")
+        print("  Reservas por estado:")
+        for linea in self.contar_reservas_por_estado():
+            print(f"    - {linea}")
+        print("\nMensajes de negocio:")
+        print("  - Los identificadores se validan y no se repiten.")
+        print("  - Los errores incluyen el campo o entidad afectada.")
+        print("  - La reserva exige cliente, servicio y horas validas.")
         print("\nVerificacion de cumplimiento del Anexo 3:")
         for linea in self.reporte_cumplimiento_anexo3():
             print(f"  {linea}")
@@ -209,6 +243,35 @@ class SistemaFJ:
         for reserva in self.reservas:
             print(f"  {reserva.resumen()}")
 
+    def _ejecutar_operaciones_version5(self) -> None:
+        operaciones = [
+            self._op_agregar_cliente_valido,
+            self._op_agregar_cliente_duplicado,
+            self._op_agregar_cliente_invalido,
+            self._op_agregar_servicios_base,
+            self._op_agregar_servicio_duplicado,
+            self._op_crear_reserva_valida,
+            self._op_crear_reserva_duplicada,
+            self._op_crear_y_cancelar_reserva,
+            self._op_crear_reserva_sin_cliente,
+            self._op_confirmar_y_procesar_reserva_con_descuento,
+        ]
+        for numero, operacion in enumerate(operaciones, start=1):
+            print(f"\nOperacion {numero}:")
+            try:
+                operacion()
+            except AppError as error:
+                registrar_excepcion(f"Operacion {numero}", error)
+                print(f"  Error: {error}")
+            else:
+                registrar_evento(f"Operacion {numero} ejecutada correctamente.")
+            finally:
+                registrar_evento(f"Operacion {numero} finalizada.")
+        print("\nResumen final:")
+        print(f"  {self.resumen()}")
+        for reserva in self.reservas:
+            print(f"  {reserva.resumen()}")
+
     def _op_agregar_cliente_valido(self) -> None:
         cliente = Cliente("CLI-001", "Ana Perez", "100200300", "ana@correo.com", "3215550000")
         self.agregar_cliente(cliente)
@@ -267,6 +330,10 @@ class SistemaFJ:
         reserva = self.crear_reserva("RES-002", "CLI-001", "SER-003", 1.5)
         reserva.cancelar("Usuario reprogramo la asesoria")
         print(f"  OK reserva cancelada: {reserva.identificador}")
+
+    def _op_crear_reserva_duplicada(self) -> None:
+        reserva = self.crear_reserva("RES-001", "CLI-001", "SER-002", 1)
+        print(f"  OK reserva creada: {reserva.identificador}")
 
     def _op_confirmar_y_procesar_reserva_con_descuento(self) -> None:
         reserva = self.buscar_reserva("RES-001")

@@ -15,17 +15,26 @@ class Reserva:
     def __init__(self, identificador: str, cliente: Cliente, servicio: Servicio, horas: float) -> None:
         identificador = str(identificador).strip()
         if not identificador:
-            raise ValidationError("El identificador de la reserva es obligatorio.")
+            raise ValidationError("El identificador de la reserva es obligatorio y no puede quedar vacio.")
+        if cliente is None:
+            raise ValidationError("La reserva requiere un cliente valido.")
+        if servicio is None:
+            raise ValidationError("La reserva requiere un servicio valido.")
+        try:
+            horas = float(horas)
+        except (TypeError, ValueError) as exc:
+            raise ValidationError("La duracion de la reserva debe ser numerica.") from exc
         if horas <= 0:
             raise ValidationError("La duracion de la reserva debe ser mayor que cero.")
         self.identificador = identificador
         self.cliente = cliente
         self.servicio = servicio
-        self.horas = float(horas)
+        self.horas = horas
         self.estado = self.ESTADO_CREADA
         self.total = 0.0
         self.fecha_actualizacion = datetime.now()
         self.historial_estados = [(self.estado, self.fecha_actualizacion)]
+        self.motivo_cancelacion = ""
 
     def _actualizar_estado(self, estado: str) -> None:
         self.estado = estado
@@ -47,7 +56,7 @@ class Reserva:
         if self.estado == self.ESTADO_PROCESADA:
             raise ReservationError("No se puede cancelar una reserva procesada.")
         self._actualizar_estado(self.ESTADO_CANCELADA)
-        self.motivo_cancelacion = motivo.strip()
+        self.motivo_cancelacion = str(motivo).strip()
 
     def procesar(self, impuesto: float = 0.0, descuento: float = 0.0) -> float:
         if not self.servicio.activo:
@@ -61,9 +70,10 @@ class Reserva:
         return self.total
 
     def resumen(self) -> str:
+        motivo = f" | motivo={self.motivo_cancelacion}" if self.motivo_cancelacion else ""
         return (
             f"Reserva {self.identificador}: {self.cliente.descripcion()} -> "
-            f"{self.servicio.descripcion()} | horas={self.horas} | estado={self.estado} | total={self.total:.2f}"
+            f"{self.servicio.descripcion()} | horas={self.horas} | estado={self.estado} | total={self.total:.2f}{motivo}"
         )
 
     def trazabilidad(self) -> str:

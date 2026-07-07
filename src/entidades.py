@@ -8,11 +8,15 @@ from .exceptions import ValidationError
 
 class EntidadBase(ABC):
     def __init__(self, identificador: str) -> None:
-        identificador = str(identificador).strip()
+        identificador = self._normalizar_texto(identificador)
         if not identificador:
-            raise ValidationError("El identificador es obligatorio.")
+            raise ValidationError("El identificador es obligatorio y no puede quedar vacio.")
         self._identificador = identificador
         self._fecha_creacion = datetime.now()
+
+    @staticmethod
+    def _normalizar_texto(valor: str) -> str:
+        return str(valor).strip()
 
     @property
     def identificador(self) -> str:
@@ -45,9 +49,9 @@ class Cliente(EntidadBase):
 
     @nombre.setter
     def nombre(self, valor: str) -> None:
-        valor = str(valor).strip()
+        valor = self._normalizar_texto(valor)
         if len(valor) < 3:
-            raise ValidationError("El nombre del cliente debe tener al menos 3 caracteres.")
+            raise ValidationError("El nombre del cliente debe tener al menos 3 caracteres validos.")
         self._nombre = valor
 
     @property
@@ -56,9 +60,9 @@ class Cliente(EntidadBase):
 
     @documento.setter
     def documento(self, valor: str) -> None:
-        valor = str(valor).strip()
+        valor = self._normalizar_texto(valor)
         if len(valor) < 5:
-            raise ValidationError("El documento debe tener al menos 5 caracteres.")
+            raise ValidationError("El documento del cliente debe tener al menos 5 caracteres.")
         self._documento = valor
 
     @property
@@ -67,9 +71,9 @@ class Cliente(EntidadBase):
 
     @correo.setter
     def correo(self, valor: str) -> None:
-        valor = str(valor).strip().lower()
-        if "@" not in valor or "." not in valor:
-            raise ValidationError("El correo no tiene un formato valido.")
+        valor = self._normalizar_texto(valor).lower()
+        if len(valor) < 6 or "@" not in valor or "." not in valor:
+            raise ValidationError("El correo del cliente debe tener formato nombre@dominio.tld.")
         self._correo = valor
 
     @property
@@ -78,9 +82,9 @@ class Cliente(EntidadBase):
 
     @telefono.setter
     def telefono(self, valor: str) -> None:
-        valor = str(valor).strip()
+        valor = self._normalizar_texto(valor)
         if len(valor) < 7:
-            raise ValidationError("El telefono debe tener al menos 7 caracteres.")
+            raise ValidationError("El telefono del cliente debe tener al menos 7 digitos o caracteres.")
         self._telefono = valor
 
     def descripcion(self) -> str:
@@ -102,9 +106,9 @@ class Servicio(EntidadBase, ABC):
 
     @nombre.setter
     def nombre(self, valor: str) -> None:
-        valor = str(valor).strip()
+        valor = self._normalizar_texto(valor)
         if len(valor) < 3:
-            raise ValidationError("El nombre del servicio debe tener al menos 3 caracteres.")
+            raise ValidationError("El nombre del servicio debe tener al menos 3 caracteres validos.")
         self._nombre = valor
 
     @property
@@ -114,11 +118,13 @@ class Servicio(EntidadBase, ABC):
     @tarifa_base.setter
     def tarifa_base(self, valor: float) -> None:
         try:
+            if isinstance(valor, bool):
+                raise TypeError
             valor = float(valor)
-        except ValueError as exc:
-            raise ValidationError("La tarifa base debe ser numerica.") from exc
+        except (TypeError, ValueError) as exc:
+            raise ValidationError("La tarifa base del servicio debe ser numerica.") from exc
         if valor <= 0:
-            raise ValidationError("La tarifa base debe ser mayor que cero.")
+            raise ValidationError("La tarifa base del servicio debe ser mayor que cero.")
         self._tarifa_base = valor
 
     @property
@@ -151,9 +157,14 @@ class ServicioSala(Servicio):
 
     @capacidad.setter
     def capacidad(self, valor: int) -> None:
-        valor = int(valor)
+        try:
+            if isinstance(valor, bool):
+                raise TypeError
+            valor = int(valor)
+        except (TypeError, ValueError) as exc:
+            raise ValidationError("La capacidad de la sala debe ser un entero valido.") from exc
         if valor <= 0:
-            raise ValidationError("La capacidad debe ser mayor que cero.")
+            raise ValidationError("La capacidad de la sala debe ser mayor que cero.")
         self._capacidad = valor
 
     def calcular_costo(self, horas: float = 1, impuesto: float = 0.0, descuento: float = 0.0) -> float:
@@ -177,9 +188,14 @@ class ServicioEquipo(Servicio):
 
     @cantidad.setter
     def cantidad(self, valor: int) -> None:
-        valor = int(valor)
+        try:
+            if isinstance(valor, bool):
+                raise TypeError
+            valor = int(valor)
+        except (TypeError, ValueError) as exc:
+            raise ValidationError("La cantidad de equipos debe ser un entero valido.") from exc
         if valor <= 0:
-            raise ValidationError("La cantidad debe ser mayor que cero.")
+            raise ValidationError("La cantidad de equipos debe ser mayor que cero.")
         self._cantidad = valor
 
     def calcular_costo(self, horas: float = 1, impuesto: float = 0.0, descuento: float = 0.0) -> float:
@@ -203,9 +219,9 @@ class ServicioAsesoria(Servicio):
 
     @especialidad.setter
     def especialidad(self, valor: str) -> None:
-        valor = str(valor).strip()
+        valor = self._normalizar_texto(valor)
         if len(valor) < 4:
-            raise ValidationError("La especialidad debe tener al menos 4 caracteres.")
+            raise ValidationError("La especialidad de la asesoria debe tener al menos 4 caracteres.")
         self._especialidad = valor
 
     def calcular_costo(self, horas: float = 1, impuesto: float = 0.0, descuento: float = 0.0) -> float:
