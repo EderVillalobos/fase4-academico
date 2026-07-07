@@ -58,6 +58,14 @@ El sistema debe manejar errores provenientes de:
 - `README.md` guia minima de ejecucion.
 - `.gitignore` exclusiones locales.
 
+## Prueba funcional
+
+1. Descargar o clonar el repositorio.
+2. Abrir una terminal en la carpeta del proyecto.
+3. Ejecutar el programa con el comando indicado abajo.
+4. Revisar en consola el desarrollo de las operaciones y la generacion de eventos.
+5. Verificar el archivo `logs/eventos.log` para confirmar el registro de errores y sucesos.
+
 ## Ejecucion
 
 ```bash
