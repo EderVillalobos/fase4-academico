@@ -66,6 +66,18 @@ class SistemaFJ:
     def listar_reservas(self) -> List[str]:
         return [reserva.resumen() for reserva in self.reservas]
 
+    def contar_reservas_por_estado(self) -> List[str]:
+        estados = {
+            Reserva.ESTADO_CREADA: 0,
+            Reserva.ESTADO_CONFIRMADA: 0,
+            Reserva.ESTADO_CANCELADA: 0,
+            Reserva.ESTADO_PROCESADA: 0,
+        }
+        for reserva in self.reservas:
+            if reserva.estado in estados:
+                estados[reserva.estado] += 1
+        return [f"{estado}: {cantidad}" for estado, cantidad in estados.items()]
+
     def reporte_cumplimiento_anexo3(self) -> List[str]:
         reporte = [
             "Cumplimiento Anexo 3:",
@@ -91,6 +103,27 @@ class SistemaFJ:
     def ejecutar_demostracion_v2(self) -> None:
         print("=== Sistema Integral de Gestion FJ - Version 2 ===")
         self._ejecutar_operaciones_base()
+        print("\nVerificacion de cumplimiento del Anexo 3:")
+        for linea in self.reporte_cumplimiento_anexo3():
+            print(f"  {linea}")
+        print("\nTrazabilidad de reservas:")
+        for reserva in self.reservas:
+            print(f"  {reserva.identificador}: {reserva.trazabilidad()}")
+
+    def ejecutar_demostracion_v4(self) -> None:
+        print("=== Sistema Integral de Gestion FJ - Version 4 ===")
+        self._ejecutar_operaciones_version3()
+        print("\nReporte academico consolidado:")
+        print(f"  {self.resumen()}")
+        print("  Reservas por estado:")
+        for linea in self.contar_reservas_por_estado():
+            print(f"    - {linea}")
+        print("  Listados resumidos:")
+        print(f"    Clientes registrados: {len(self.listar_clientes())}")
+        print(f"    Servicios registrados: {len(self.listar_servicios())}")
+        print(f"    Reservas registradas: {len(self.listar_reservas())}")
+        print("  Observacion:")
+        print("    La version 4 consolida la trazabilidad y deja el reporte listo para documentacion academica.")
         print("\nVerificacion de cumplimiento del Anexo 3:")
         for linea in self.reporte_cumplimiento_anexo3():
             print(f"  {linea}")
