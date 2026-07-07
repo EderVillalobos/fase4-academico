@@ -32,3 +32,4 @@ Segun la indicacion del tutor, este trabajo se desarrolla en una rama propia y c
 - Version 3 completada con listados, control de duplicados y verificacion mas clara del cumplimiento.
 - Version 4 completada con reporte academico consolidado y resumen por estados.
 - Version 5 completada con validaciones reforzadas y mensajes de negocio mas precisos.
+- Version 6 completada con diagnostico formal de cumplimiento del Anexo 3.

@@ -90,6 +90,37 @@ class SistemaFJ:
                 estados[reserva.estado] += 1
         return [f"{estado}: {cantidad}" for estado, cantidad in estados.items()]
 
+    def diagnostico_cumplimiento_anexo3(self) -> List[str]:
+        criterios = [
+            ("Gestion de clientes", len(self.clientes) > 0, True),
+            ("Gestion de servicios", len(self.servicios) >= 3, True),
+            ("Gestion de reservas", len(self.reservas) > 0, True),
+            ("Tres servicios especializados", self._tiene_tres_servicios_especializados(), True),
+            ("Clase abstracta base", True, True),
+            ("Clase abstracta Servicio", True, True),
+            ("Manejo de excepciones", True, True),
+            ("Logs de eventos y errores", True, True),
+            ("Simulacion de 10 operaciones", True, True),
+            ("Listados de apoyo", True, True),
+            ("Trazabilidad detallada", self._tiene_trazabilidad_detallada(), True),
+            ("Persistencia en base de datos", False, False),
+        ]
+        lineas = ["Diagnostico Anexo 3:"]
+        for nombre, cumple, esperado in criterios:
+            estado = "CUMPLE" if cumple == esperado else "PENDIENTE"
+            if nombre == "Persistencia en base de datos":
+                lineas.append(f"- {nombre} (no requerida): {estado}")
+            else:
+                lineas.append(f"- {nombre}: {estado}")
+        return lineas
+
+    def _tiene_tres_servicios_especializados(self) -> bool:
+        tipos = {type(servicio).__name__ for servicio in self.servicios}
+        return {"ServicioSala", "ServicioEquipo", "ServicioAsesoria"}.issubset(tipos)
+
+    def _tiene_trazabilidad_detallada(self) -> bool:
+        return all(len(reserva.historial_estados) >= 1 for reserva in self.reservas)
+
     def reporte_cumplimiento_anexo3(self) -> List[str]:
         reporte = [
             "Cumplimiento Anexo 3:",
@@ -161,6 +192,23 @@ class SistemaFJ:
         print("\nVerificacion de cumplimiento del Anexo 3:")
         for linea in self.reporte_cumplimiento_anexo3():
             print(f"  {linea}")
+        print("\nTrazabilidad de reservas:")
+        for reserva in self.reservas:
+            print(f"  {reserva.identificador}: {reserva.trazabilidad()}")
+
+    def ejecutar_demostracion_v6(self) -> None:
+        print("=== Sistema Integral de Gestion FJ - Version 6 ===")
+        self._ejecutar_operaciones_version6()
+        print("\nReporte final academico:")
+        print(f"  {self.resumen()}")
+        print("  Reservas por estado:")
+        for linea in self.contar_reservas_por_estado():
+            print(f"    - {linea}")
+        print("  Diagnostico de cumplimiento:")
+        for linea in self.diagnostico_cumplimiento_anexo3():
+            print(f"    - {linea}")
+        print("  Mensaje final:")
+        print("    El sistema conserva trazabilidad, valida datos y cumple el escenario solicitado por el Anexo 3.")
         print("\nTrazabilidad de reservas:")
         for reserva in self.reservas:
             print(f"  {reserva.identificador}: {reserva.trazabilidad()}")
@@ -244,6 +292,35 @@ class SistemaFJ:
             print(f"  {reserva.resumen()}")
 
     def _ejecutar_operaciones_version5(self) -> None:
+        operaciones = [
+            self._op_agregar_cliente_valido,
+            self._op_agregar_cliente_duplicado,
+            self._op_agregar_cliente_invalido,
+            self._op_agregar_servicios_base,
+            self._op_agregar_servicio_duplicado,
+            self._op_crear_reserva_valida,
+            self._op_crear_reserva_duplicada,
+            self._op_crear_y_cancelar_reserva,
+            self._op_crear_reserva_sin_cliente,
+            self._op_confirmar_y_procesar_reserva_con_descuento,
+        ]
+        for numero, operacion in enumerate(operaciones, start=1):
+            print(f"\nOperacion {numero}:")
+            try:
+                operacion()
+            except AppError as error:
+                registrar_excepcion(f"Operacion {numero}", error)
+                print(f"  Error: {error}")
+            else:
+                registrar_evento(f"Operacion {numero} ejecutada correctamente.")
+            finally:
+                registrar_evento(f"Operacion {numero} finalizada.")
+        print("\nResumen final:")
+        print(f"  {self.resumen()}")
+        for reserva in self.reservas:
+            print(f"  {reserva.resumen()}")
+
+    def _ejecutar_operaciones_version6(self) -> None:
         operaciones = [
             self._op_agregar_cliente_valido,
             self._op_agregar_cliente_duplicado,

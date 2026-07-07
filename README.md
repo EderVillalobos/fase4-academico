@@ -26,4 +26,4 @@ Desde la raiz del proyecto:
 python -m src.main
 ```
 
-La version actual imprime una demostracion de clientes, servicios, reservas, validaciones, listados, verificacion de cumplimiento del Anexo 3 y un reporte academico consolidado. La version 5 refuerza mensajes y validaciones de negocio con errores mas claros y duplicados controlados.
+La version actual imprime una demostracion de clientes, servicios, reservas, validaciones, listados, verificacion de cumplimiento del Anexo 3 y un reporte academico consolidado. La version 6 agrega un diagnostico formal de cumplimiento del Anexo 3 con criterio por criterio.
