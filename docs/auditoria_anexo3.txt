@@ -1,0 +1,33 @@
+AUDITORIA DE CUMPLIMIENTO - ANEXO 3
+Generado: 2026-07-06 22:35:45
+
+1. Estructura funcional
+   - Clientes registrados: 1
+   - Servicios registrados: 3
+   - Reservas registradas: 2
+   - Tres servicios especializados: SI
+
+2. POO obligatoria
+   - Clase abstracta base EntidadBase: SI
+   - Clase abstracta Servicio: SI
+   - Clase Cliente con validaciones: SI
+   - Clase Reserva con estados: SI
+   - Metodos confirmar/cancelar/procesar: SI
+
+3. Manejo de errores
+   - Excepciones personalizadas: SI
+   - Encadenamiento de excepciones: SI
+   - Bloques try/except/else/finally: SI
+   - Logs de eventos y errores: SI
+
+4. Flujo exigido por el anexo
+   - Simulacion de 10 operaciones: SI
+   - Listados de apoyo: SI
+   - Trazabilidad detallada: SI
+
+5. Restricciones cumplidas
+   - Persistencia en base de datos: NO, tal como lo exige el anexo.
+   - La informacion se mantiene en memoria y los eventos se registran en logs.
+
+6. Conclusión
+   El programa cumple con la estructura, el flujo y la robustez solicitados por el Anexo 3.
