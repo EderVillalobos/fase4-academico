@@ -1,4 +1,4 @@
-# Fase 4 Academico
+# Fase 4 Ejercicio 1: Sistema Integral de Gestión de Clientes, Servicios y Reservas
 
 Proyecto independiente para continuar el desarrollo del sistema solicitado en la Fase 4.
 
