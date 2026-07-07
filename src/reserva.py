@@ -25,10 +25,12 @@ class Reserva:
         self.estado = self.ESTADO_CREADA
         self.total = 0.0
         self.fecha_actualizacion = datetime.now()
+        self.historial_estados = [(self.estado, self.fecha_actualizacion)]
 
     def _actualizar_estado(self, estado: str) -> None:
         self.estado = estado
         self.fecha_actualizacion = datetime.now()
+        self.historial_estados.append((estado, self.fecha_actualizacion))
 
     def confirmar(self) -> None:
         if self.estado == self.ESTADO_CANCELADA:
@@ -63,3 +65,9 @@ class Reserva:
             f"Reserva {self.identificador}: {self.cliente.descripcion()} -> "
             f"{self.servicio.descripcion()} | horas={self.horas} | estado={self.estado} | total={self.total:.2f}"
         )
+
+    def trazabilidad(self) -> str:
+        partes = []
+        for estado, marca in self.historial_estados:
+            partes.append(f"{estado}@{marca.strftime('%H:%M:%S')}")
+        return " -> ".join(partes)

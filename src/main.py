@@ -5,10 +5,10 @@ from .sistema import SistemaFJ
 
 
 def main() -> None:
-    registrar_evento("Inicio de ejecucion de version 1.")
+    registrar_evento("Inicio de ejecucion de version 2.")
     sistema = SistemaFJ()
-    sistema.ejecutar_demostracion_v1()
-    registrar_evento("Fin de ejecucion de version 1.")
+    sistema.ejecutar_demostracion_v2()
+    registrar_evento("Fin de ejecucion de version 2.")
 
 
 if __name__ == "__main__":

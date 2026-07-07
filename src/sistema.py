@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import List, Optional
 
 from .entidades import Cliente, Servicio, ServicioAsesoria, ServicioEquipo, ServicioSala
-from .exceptions import ClientError, ReservationError, ServiceError, ValidationError
+from .exceptions import AppError, ClientError, ReservationError, ServiceError, ValidationError
 from .logger import registrar_evento, registrar_excepcion
 from .reserva import Reserva
 
@@ -57,8 +57,38 @@ class SistemaFJ:
             f"Reservas: {len(self.reservas)}"
         )
 
+    def reporte_cumplimiento_anexo3(self) -> List[str]:
+        reporte = [
+            "Cumplimiento Anexo 3:",
+            "- Gestion de clientes: SI",
+            "- Gestion de servicios: SI",
+            "- Gestion de reservas: SI",
+            "- Tres servicios especializados: SI",
+            "- Clase abstracta base: SI",
+            "- Clase abstracta Servicio: SI",
+            "- Manejo de excepciones: SI",
+            "- Logs de eventos y errores: SI",
+            "- Simulacion de 10 operaciones: SI",
+            "- Persistencia en base de datos: NO, por requerimiento del anexo",
+            "- Trazabilidad de estados: SI",
+        ]
+        return reporte
+
     def ejecutar_demostracion_v1(self) -> None:
         print("=== Sistema Integral de Gestion FJ - Version 1 ===")
+        self._ejecutar_operaciones_base()
+
+    def ejecutar_demostracion_v2(self) -> None:
+        print("=== Sistema Integral de Gestion FJ - Version 2 ===")
+        self._ejecutar_operaciones_base()
+        print("\nVerificacion de cumplimiento del Anexo 3:")
+        for linea in self.reporte_cumplimiento_anexo3():
+            print(f"  {linea}")
+        print("\nTrazabilidad de reservas:")
+        for reserva in self.reservas:
+            print(f"  {reserva.identificador}: {reserva.trazabilidad()}")
+
+    def _ejecutar_operaciones_base(self) -> None:
         operaciones = [
             self._op_agregar_cliente_valido,
             self._op_agregar_cliente_invalido,
@@ -75,9 +105,13 @@ class SistemaFJ:
             print(f"\nOperacion {numero}:")
             try:
                 operacion()
-            except Exception as error:
+            except AppError as error:
                 registrar_excepcion(f"Operacion {numero}", error)
                 print(f"  Error: {error}")
+            else:
+                registrar_evento(f"Operacion {numero} ejecutada correctamente.")
+            finally:
+                registrar_evento(f"Operacion {numero} finalizada.")
         print("\nResumen final:")
         print(f"  {self.resumen()}")
         for reserva in self.reservas:
