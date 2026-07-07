@@ -26,4 +26,4 @@ Desde la raiz del proyecto:
 python -m src.main
 ```
 
-La version actual imprime una demostracion de clientes, servicios, reservas, validaciones, listados, verificacion de cumplimiento del Anexo 3 y un reporte academico consolidado. La version 6 agrega un diagnostico formal de cumplimiento del Anexo 3 con criterio por criterio.
+La version actual imprime una demostracion de clientes, servicios, reservas, validaciones, listados, verificacion de cumplimiento del Anexo 3 y un reporte academico consolidado. La version 7 une todo en un flujo de entrega casi final, con diagnostico y cierre academico.
