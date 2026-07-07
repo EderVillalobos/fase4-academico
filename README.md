@@ -26,4 +26,4 @@ Desde la raiz del proyecto:
 python -m src.main
 ```
 
-La version 1 imprime una demostracion de clientes, servicios, reservas, validaciones y manejo basico de errores.
+La version actual imprime una demostracion de clientes, servicios, reservas, validaciones, listados y verificacion de cumplimiento del Anexo 3.

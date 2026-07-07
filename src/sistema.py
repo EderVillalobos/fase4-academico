@@ -57,6 +57,15 @@ class SistemaFJ:
             f"Reservas: {len(self.reservas)}"
         )
 
+    def listar_clientes(self) -> List[str]:
+        return [cliente.descripcion() for cliente in self.clientes]
+
+    def listar_servicios(self) -> List[str]:
+        return [servicio.descripcion() for servicio in self.servicios]
+
+    def listar_reservas(self) -> List[str]:
+        return [reserva.resumen() for reserva in self.reservas]
+
     def reporte_cumplimiento_anexo3(self) -> List[str]:
         reporte = [
             "Cumplimiento Anexo 3:",
@@ -69,8 +78,9 @@ class SistemaFJ:
             "- Manejo de excepciones: SI",
             "- Logs de eventos y errores: SI",
             "- Simulacion de 10 operaciones: SI",
+            "- Listados de apoyo: SI",
+            "- Trazabilidad detallada: SI",
             "- Persistencia en base de datos: NO, por requerimiento del anexo",
-            "- Trazabilidad de estados: SI",
         ]
         return reporte
 
@@ -81,6 +91,26 @@ class SistemaFJ:
     def ejecutar_demostracion_v2(self) -> None:
         print("=== Sistema Integral de Gestion FJ - Version 2 ===")
         self._ejecutar_operaciones_base()
+        print("\nVerificacion de cumplimiento del Anexo 3:")
+        for linea in self.reporte_cumplimiento_anexo3():
+            print(f"  {linea}")
+        print("\nTrazabilidad de reservas:")
+        for reserva in self.reservas:
+            print(f"  {reserva.identificador}: {reserva.trazabilidad()}")
+
+    def ejecutar_demostracion_v3(self) -> None:
+        print("=== Sistema Integral de Gestion FJ - Version 3 ===")
+        self._ejecutar_operaciones_version3()
+        print("\nListados finales:")
+        print("  Clientes:")
+        for linea in self.listar_clientes():
+            print(f"    - {linea}")
+        print("  Servicios:")
+        for linea in self.listar_servicios():
+            print(f"    - {linea}")
+        print("  Reservas:")
+        for linea in self.listar_reservas():
+            print(f"    - {linea}")
         print("\nVerificacion de cumplimiento del Anexo 3:")
         for linea in self.reporte_cumplimiento_anexo3():
             print(f"  {linea}")
@@ -117,8 +147,42 @@ class SistemaFJ:
         for reserva in self.reservas:
             print(f"  {reserva.resumen()}")
 
+    def _ejecutar_operaciones_version3(self) -> None:
+        operaciones = [
+            self._op_agregar_cliente_valido,
+            self._op_agregar_cliente_duplicado,
+            self._op_agregar_cliente_invalido,
+            self._op_agregar_servicios_base,
+            self._op_agregar_servicio_duplicado,
+            self._op_crear_reserva_valida,
+            self._op_crear_y_cancelar_reserva,
+            self._op_crear_reserva_sin_cliente,
+            self._op_crear_reserva_horas_invalidas,
+            self._op_confirmar_y_procesar_reserva_con_descuento,
+        ]
+        for numero, operacion in enumerate(operaciones, start=1):
+            print(f"\nOperacion {numero}:")
+            try:
+                operacion()
+            except AppError as error:
+                registrar_excepcion(f"Operacion {numero}", error)
+                print(f"  Error: {error}")
+            else:
+                registrar_evento(f"Operacion {numero} ejecutada correctamente.")
+            finally:
+                registrar_evento(f"Operacion {numero} finalizada.")
+        print("\nResumen final:")
+        print(f"  {self.resumen()}")
+        for reserva in self.reservas:
+            print(f"  {reserva.resumen()}")
+
     def _op_agregar_cliente_valido(self) -> None:
         cliente = Cliente("CLI-001", "Ana Perez", "100200300", "ana@correo.com", "3215550000")
+        self.agregar_cliente(cliente)
+        print(f"  OK cliente: {cliente.descripcion()}")
+
+    def _op_agregar_cliente_duplicado(self) -> None:
+        cliente = Cliente("CLI-001", "Ana Perez Dos", "100200301", "ana2@correo.com", "3215550001")
         self.agregar_cliente(cliente)
         print(f"  OK cliente: {cliente.descripcion()}")
 
@@ -126,6 +190,15 @@ class SistemaFJ:
         cliente = Cliente("CLI-002", "Lu", "123", "correo-invalido", "123")
         self.agregar_cliente(cliente)
         print(f"  OK cliente: {cliente.descripcion()}")
+
+    def _op_agregar_servicios_base(self) -> None:
+        sala = ServicioSala("SER-001", "Sala Reuniones", 120000, 12)
+        equipo = ServicioEquipo("SER-002", "Proyector", 45000, 2)
+        asesoria = ServicioAsesoria("SER-003", "Asesoria Tecnica", 90000, "Sistemas")
+        self.agregar_servicio(sala)
+        self.agregar_servicio(equipo)
+        self.agregar_servicio(asesoria)
+        print("  OK servicios base agregados.")
 
     def _op_agregar_servicio_sala(self) -> None:
         servicio = ServicioSala("SER-001", "Sala Reuniones", 120000, 12)
@@ -139,6 +212,11 @@ class SistemaFJ:
 
     def _op_agregar_servicio_asesoria(self) -> None:
         servicio = ServicioAsesoria("SER-003", "Asesoria Tecnica", 90000, "Sistemas")
+        self.agregar_servicio(servicio)
+        print(f"  OK servicio: {servicio.descripcion()}")
+
+    def _op_agregar_servicio_duplicado(self) -> None:
+        servicio = ServicioSala("SER-001", "Sala Premium", 150000, 20)
         self.agregar_servicio(servicio)
         print(f"  OK servicio: {servicio.descripcion()}")
 
@@ -156,6 +234,14 @@ class SistemaFJ:
         reserva = self.crear_reserva("RES-002", "CLI-001", "SER-003", 1.5)
         reserva.cancelar("Usuario reprogramo la asesoria")
         print(f"  OK reserva cancelada: {reserva.identificador}")
+
+    def _op_confirmar_y_procesar_reserva_con_descuento(self) -> None:
+        reserva = self.buscar_reserva("RES-001")
+        if reserva is None:
+            raise ReservationError("No se encontro la reserva para procesar.")
+        reserva.confirmar()
+        total = reserva.procesar(impuesto=0.19, descuento=15000)
+        print(f"  OK reserva procesada con descuento: {total:.2f}")
 
     def _op_confirmar_y_procesar_reserva_valida(self) -> None:
         reserva = self.buscar_reserva("RES-001")

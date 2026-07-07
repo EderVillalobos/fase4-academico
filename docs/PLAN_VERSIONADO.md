@@ -29,3 +29,4 @@ Segun la indicacion del tutor, este trabajo se desarrolla en una rama propia y c
 
 - Version 1 completada y publicada.
 - Version 2 completada con trazabilidad, reporte de cumplimiento del Anexo 3 y manejo `try/except/else/finally`.
+- Version 3 completada con listados, control de duplicados y verificacion mas clara del cumplimiento.
