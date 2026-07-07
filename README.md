@@ -26,4 +26,4 @@ Desde la raiz del proyecto:
 python -m src.main
 ```
 
-La version actual imprime una demostracion de clientes, servicios, reservas, validaciones, listados, verificacion de cumplimiento del Anexo 3 y un reporte academico consolidado. La version 7 une todo en un flujo de entrega casi final, con diagnostico y cierre academico.
+La version actual imprime una demostracion de clientes, servicios, reservas, validaciones, listados, verificacion de cumplimiento del Anexo 3 y un reporte academico consolidado. La version 8 ya genera un archivo de reporte final y pule la presentacion de cierre.

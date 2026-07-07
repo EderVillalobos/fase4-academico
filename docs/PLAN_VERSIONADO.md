@@ -34,3 +34,4 @@ Segun la indicacion del tutor, este trabajo se desarrolla en una rama propia y c
 - Version 5 completada con validaciones reforzadas y mensajes de negocio mas precisos.
 - Version 6 completada con diagnostico formal de cumplimiento del Anexo 3.
 - Version 7 completada con flujo consolidado de entrega final.
+- Version 8 completada con archivo de reporte final y mensajes de presentacion pulidos.

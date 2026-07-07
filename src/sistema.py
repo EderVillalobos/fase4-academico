@@ -1,11 +1,18 @@
 from __future__ import annotations
 
+from datetime import datetime
 from typing import List, Optional
+from pathlib import Path
 
 from .entidades import Cliente, Servicio, ServicioAsesoria, ServicioEquipo, ServicioSala
 from .exceptions import AppError, ClientError, ReservationError, ServiceError, ValidationError
 from .logger import registrar_evento, registrar_excepcion
 from .reserva import Reserva
+
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+DOCS_DIR = BASE_DIR / "docs"
+REPORTE_FINAL = DOCS_DIR / "reporte_final.txt"
 
 
 class SistemaFJ:
@@ -128,6 +135,55 @@ class SistemaFJ:
         ]
         return lineas
 
+    def construir_reporte_final(self) -> List[str]:
+        lineas = [
+            "REPORTE FINAL DEL SISTEMA - FASE 4",
+            f"Generado: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+            "",
+            "1. Resumen general",
+            f"   {self.resumen()}",
+            "",
+            "2. Estado de reservas",
+        ]
+        for linea in self.contar_reservas_por_estado():
+            lineas.append(f"   - {linea}")
+        lineas.extend(
+            [
+                "",
+                "3. Verificacion de cumplimiento del Anexo 3",
+            ]
+        )
+        for linea in self.diagnostico_cumplimiento_anexo3():
+            lineas.append(f"   - {linea}")
+        lineas.extend(
+            [
+                "",
+                "4. Listados de apoyo",
+                f"   - Clientes: {len(self.listar_clientes())}",
+                f"   - Servicios: {len(self.listar_servicios())}",
+                f"   - Reservas: {len(self.listar_reservas())}",
+                "",
+                "5. Trazabilidad",
+            ]
+        )
+        for reserva in self.reservas:
+            lineas.append(f"   - {reserva.identificador}: {reserva.trazabilidad()}")
+        lineas.extend(
+            [
+                "",
+                "6. Cierre academico",
+                "   El flujo queda consolidado para presentacion, revision y entrega final.",
+            ]
+        )
+        return lineas
+
+    def guardar_reporte_final(self) -> Path:
+        DOCS_DIR.mkdir(parents=True, exist_ok=True)
+        contenido = "\n".join(self.construir_reporte_final()) + "\n"
+        REPORTE_FINAL.write_text(contenido, encoding="utf-8")
+        registrar_evento(f"Reporte final generado: {REPORTE_FINAL.name}")
+        return REPORTE_FINAL
+
     def _tiene_tres_servicios_especializados(self) -> bool:
         tipos = {type(servicio).__name__ for servicio in self.servicios}
         return {"ServicioSala", "ServicioEquipo", "ServicioAsesoria"}.issubset(tipos)
@@ -244,6 +300,25 @@ class SistemaFJ:
             print(f"  {reserva.identificador}: {reserva.trazabilidad()}")
         print("\nCierre:")
         print("  El flujo queda consolidado para la entrega final, con salida clara, trazabilidad y criterios del anexo cubiertos.")
+
+    def ejecutar_demostracion_v8(self) -> None:
+        print("=== Sistema Integral de Gestion FJ - Version 8 ===")
+        self._ejecutar_operaciones_version6()
+        ruta = self.guardar_reporte_final()
+        print("\nPresentacion final:")
+        print("  El sistema ya genera un reporte final escrito en disco.")
+        print(f"  Archivo generado: {ruta}")
+        print("  Mensaje de cierre:")
+        print("    La entrega queda casi lista, con validaciones, trazabilidad, reporte y cumplimiento del Anexo 3.")
+        print("\nResumen ejecutivo:")
+        for linea in self.reporte_entrega_final():
+            print(f"  {linea}")
+        print("\nDiagnostico de cumplimiento del Anexo 3:")
+        for linea in self.diagnostico_cumplimiento_anexo3():
+            print(f"  {linea}")
+        print("\nTrazabilidad de reservas:")
+        for reserva in self.reservas:
+            print(f"  {reserva.identificador}: {reserva.trazabilidad()}")
 
     def ejecutar_demostracion_v3(self) -> None:
         print("=== Sistema Integral de Gestion FJ - Version 3 ===")
