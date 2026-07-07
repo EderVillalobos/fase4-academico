@@ -332,7 +332,6 @@ class InterfazFJ:
                 self.var_res_horas.get(),
             )
             registrar_evento(f"Reserva creada desde GUI: {reserva.identificador}")
-            self._limpiar_reserva()
 
         self._ejecutar_con_manejo("Crear reserva", operacion, "Reserva creada correctamente.")
 
