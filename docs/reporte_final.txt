@@ -1,5 +1,5 @@
 REPORTE FINAL DEL SISTEMA - FASE 4
-Generado: 2026-07-06 22:35:45
+Generado: 2026-07-06 22:38:17
 
 1. Resumen general
    Clientes: 1 | Servicios: 3 | Reservas: 2
@@ -36,8 +36,8 @@ Generado: 2026-07-06 22:35:45
    - Reservas: 2
 
 5. Trazabilidad
-   - RES-001: creada@22:35:45 -> confirmada@22:35:45 -> procesada@22:35:45
-   - RES-002: creada@22:35:45 -> cancelada@22:35:45
+   - RES-001: creada@22:38:17 -> confirmada@22:38:17 -> procesada@22:38:17
+   - RES-002: creada@22:38:17 -> cancelada@22:38:17
 
 6. Cierre academico
    El flujo queda consolidado para presentacion, revision y entrega final.

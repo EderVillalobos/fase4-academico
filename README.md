@@ -26,4 +26,4 @@ Desde la raiz del proyecto:
 python -m src.main
 ```
 
-La version actual imprime una demostracion de clientes, servicios, reservas, validaciones, listados, verificacion de cumplimiento del Anexo 3 y un reporte academico consolidado. La version 9 agrega una auditoria completa del Anexo 3 y deja evidencia escrita adicional.
+La version actual imprime una demostracion de clientes, servicios, reservas, validaciones, listados, verificacion de cumplimiento del Anexo 3 y un reporte academico consolidado. La version 10 cierra tecnicamente el proyecto con evidencia final de entrega.

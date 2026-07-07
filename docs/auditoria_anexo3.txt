@@ -1,5 +1,5 @@
 AUDITORIA DE CUMPLIMIENTO - ANEXO 3
-Generado: 2026-07-06 22:35:45
+Generado: 2026-07-06 22:38:17
 
 1. Estructura funcional
    - Clientes registrados: 1
