@@ -63,5 +63,3 @@ El sistema debe manejar errores provenientes de:
 ```bash
 python -m src.main
 ```
-
-El flujo actual ejecuta la demostracion del sistema y genera los archivos de salida necesarios de forma local.
